@@ -4,6 +4,7 @@ import (
 	"flag"
 
 	log "github.com/sirupsen/logrus"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
@@ -22,5 +23,11 @@ func main() {
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
 		log.WithError(err).Fatal("Failed to build config")
+	}
+
+	log.Info("Create clientset from config")
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		log.WithError(err).Fatal("Failed to create clientset")
 	}
 }
