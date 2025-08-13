@@ -5,7 +5,9 @@ import (
 	"flag"
 
 	log "github.com/sirupsen/logrus"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
@@ -38,11 +40,22 @@ func main() {
 	if err != nil {
 		log.WithError(err).Fatal("Failed to watch pods")
 	}
+	defer wiface.Stop()
 
-	for {
-		select {
-		case msg := <-wiface.ResultChan():
-			log.Infof("Received event: %+v", msg)
+	for event := range wiface.ResultChan() {
+		pod := event.Object.(*corev1.Pod)
+		switch event.Type {
+		case watch.Added:
+			log.Infof("Pod %s/%s added", pod.Namespace, pod.Name)
+			// Handle pod addition
+		case watch.Modified:
+			log.Infof("Pod %s/%s modified", pod.Namespace, pod.Name)
+			// Handle pod modification
+		case watch.Deleted:
+			log.Infof("Pod %s/%s deleted", pod.Namespace, pod.Name)
+			// Handle pod deletion
 		}
 	}
+
+	log.Info("Watch channel closed")
 }
