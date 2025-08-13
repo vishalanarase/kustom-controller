@@ -43,7 +43,12 @@ func main() {
 	defer wiface.Stop()
 
 	for event := range wiface.ResultChan() {
+
 		pod := event.Object.(*corev1.Pod)
+		if pod.Namespace != "default" {
+			continue
+		}
+
 		switch event.Type {
 		case watch.Added:
 			log.Infof("Pod %s/%s added", pod.Namespace, pod.Name)
