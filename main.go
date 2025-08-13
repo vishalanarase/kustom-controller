@@ -6,6 +6,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/kubernetes"
@@ -52,7 +53,7 @@ func main() {
 		switch event.Type {
 		case watch.Added:
 			log.Infof("Pod %s/%s added", pod.Namespace, pod.Name)
-			// Handle pod addition
+			enforceResources(pod)
 		case watch.Modified:
 			log.Infof("Pod %s/%s modified", pod.Namespace, pod.Name)
 			// Handle pod modification
@@ -63,4 +64,17 @@ func main() {
 	}
 
 	log.Info("Watch channel closed")
+}
+
+// enforceResources sets default resource requests for a pod's containers if not already set.
+func enforceResources(pod *corev1.Pod) {
+	for i := range pod.Spec.Containers {
+		if pod.Spec.Containers[i].Resources.Requests == nil {
+			pod.Spec.Containers[i].Resources.Requests = corev1.ResourceList{
+				corev1.ResourceCPU:    resource.MustParse("100m"),
+				corev1.ResourceMemory: resource.MustParse("128Mi"),
+			}
+			log.Infof("Set default resources for container %s in pod %s/%s", pod.Spec.Containers[i].Name, pod.Namespace, pod.Name)
+		}
+	}
 }
