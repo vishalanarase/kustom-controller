@@ -53,7 +53,15 @@ func main() {
 		switch event.Type {
 		case watch.Added:
 			log.Infof("Pod %s/%s added", pod.Namespace, pod.Name)
+
 			enforceResources(pod)
+
+			_, err := clientset.CoreV1().Pods(pod.Namespace).Update(context.Background(), pod, metav1.UpdateOptions{})
+			if err != nil {
+				log.WithError(err).Errorf("Failed to update pod %s/%s with enforced resources", pod.Namespace, pod.Name)
+			} else {
+				log.Infof("Updated pod %s/%s with enforced resources", pod.Namespace, pod.Name)
+			}
 		case watch.Modified:
 			log.Infof("Pod %s/%s modified", pod.Namespace, pod.Name)
 			// Handle pod modification
