@@ -1,0 +1,12 @@
+{{- if .Values.metrics.enabled }}
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "kustom-controller.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  kubectl port-forward $POD_NAME {{ .Values.metrics.port }}:{{ .Values.metrics.port }}
+  echo "Visit http://127.0.0.1:{{ .Values.metrics.port }}/metrics to view your metrics"
+
+2. To verify the controller is working:
+  kubectl logs -f deployment/{{ include "kustom-controller.fullname" . }}
+{{- else }}
+1. To verify the controller is working:
+  kubectl logs -f deployment/{{ include "kustom-controller.fullname" . }}
+{{- end }}
