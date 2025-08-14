@@ -14,10 +14,7 @@ helm install kustom-controller kustom-controller/kustom-controller
 
 ## Package chart
 ```bash
-cd helm/chart/kustom-controller
-helm package .
-mkdir -p ../../../charts
-mv *.tgz ../../../charts/
-cd ../../../
+cd charts
+helm package ../helm/chart/
 helm repo index charts --url https://raw.githubusercontent.com/vishalanarase/kustom-controller/master/charts
 ```
