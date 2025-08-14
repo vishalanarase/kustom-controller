@@ -1,0 +1,62 @@
+# Default values for kustom-controller
+
+nameOverride: ""
+
+fullnameOverride: ""
+
+replicaCount: 2
+
+image:
+  repository: your-registry/kustom-controller
+  tag: latest
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+defaults:
+  cpu: 100m
+  memory: 128Mi
+
+metrics:
+  enabled: true
+  port: 8080
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    scrapeTimeout: 10s
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: ""
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+excludeNamespaces:
+  - kube-system
+  - kube-public
+
+imagePullSecrets: []
