@@ -1,0 +1,23 @@
+apiVersion: v1
+entries:
+  kustom-controller:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-08-14T17:56:18.382693+05:30"
+    description: A Kubernetes controller that enforces resource limits/requests on
+      pods
+    digest: 3fd26300a48fc4c4754525f2d5e9f7758b23bfe23819b7dd5ead32b584f15f12
+    keywords:
+    - kubernetes
+    - controller
+    - resources
+    - limits
+    - requests
+    maintainers:
+    - email: iamvishalanarase@gmail.com
+      name: Vishal Anarase
+    name: kustom-controller
+    urls:
+    - https://raw.githubusercontent.com/vishalanarase/kustom-controller/master/charts/kustom-controller-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-08-14T17:56:18.380583+05:30"
